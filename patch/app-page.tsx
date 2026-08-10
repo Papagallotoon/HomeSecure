@@ -24,14 +24,16 @@ export default function LandingPage() {
       {isBackgroundVideo ? (
         <BackgroundVideoHero videoSrc={video.src} />
       ) : (
-        <section className="relative z-10 mx-auto max-w-6xl px-6 pb-16 pt-20 sm:pb-20 sm:pt-24">
-          <div className="flex items-center gap-3.5 font-mono text-[11px] uppercase tracking-ops text-brand-600">
-            <span aria-hidden className="block h-px w-7 bg-brand-600" />
-            Field assessment / 72-hour window
-          </div>
+        <section className="relative z-10 mx-auto max-w-6xl px-5 pb-14 pt-14 sm:px-6 sm:pb-20 sm:pt-24">
+          {SITE.hero.eyebrow && (
+            <div className="flex items-center gap-3.5 font-mono text-[11px] uppercase tracking-ops text-brand-600">
+              <span aria-hidden className="block h-px w-7 bg-brand-600" />
+              {SITE.hero.eyebrow}
+            </div>
+          )}
 
           <h1
-            className={`${headingClass(SITE)} mt-6 max-w-4xl text-6xl leading-[0.88] text-brand-900 sm:text-7xl lg:text-[104px]`}
+            className={`${headingClass(SITE)} mt-6 max-w-4xl text-[clamp(38px,10.5vw,104px)] leading-[0.88] text-brand-900`}
             style={{ textWrap: "balance" }}
           >
             {SITE.hero.title}
@@ -44,14 +46,19 @@ export default function LandingPage() {
           <div className="mt-10 flex flex-wrap items-center gap-x-6 gap-y-5">
             <Link
               href="/quiz"
-              className="clip-bevel inline-flex items-center justify-center bg-brand-600 px-9 py-4 font-condensed text-lg font-extrabold uppercase tracking-wider text-brand-50 transition hover:bg-brand-600/85 active:scale-[0.99]"
+              className="clip-bevel inline-flex w-full items-center justify-center bg-brand-600 px-9 py-4 font-condensed text-lg font-extrabold uppercase tracking-wider text-brand-50 transition hover:bg-brand-600/85 active:scale-[0.99] sm:w-auto"
             >
               {SITE.hero.ctaLabel}
             </Link>
 
-            <div className="flex flex-wrap gap-x-6 gap-y-2 font-mono text-[11px] uppercase tracking-ops text-brand-500">
+            <div className="flex flex-wrap gap-2">
               {SITE.hero.benefits.map((benefit) => (
-                <span key={benefit}>{benefit}</span>
+                <span
+                  key={benefit}
+                  className="border border-brand-600/40 bg-brand-600/[0.08] px-3 py-2 font-mono text-[11px] uppercase tracking-wider text-brand-600"
+                >
+                  {benefit}
+                </span>
               ))}
             </div>
           </div>
@@ -72,9 +79,9 @@ export default function LandingPage() {
       )}
 
       {SITE.howItWorks.length > 0 && (
-        <section className="relative z-10 mx-auto max-w-6xl px-6 pb-24 pt-4">
+        <section className="relative z-10 mx-auto max-w-6xl px-5 pb-20 pt-4 sm:px-6 sm:pb-24">
           <div className="border-b border-white/[0.09] pb-5 font-mono text-[11px] uppercase tracking-ops text-brand-500">
-            Operational sequence
+            {SITE.howItWorksTitle}
           </div>
           <div className="grid gap-px border border-t-0 border-white/[0.09] bg-white/[0.09] sm:grid-cols-3">
             {SITE.howItWorks.map((step, i) => (
@@ -102,12 +109,14 @@ function BackgroundVideoHero({ videoSrc }: { videoSrc: string }) {
       <div className="absolute inset-0 bg-brand-50/70" />
 
       <div className="relative z-10 mx-auto w-full max-w-6xl px-6">
-        <div className="flex items-center gap-3.5 font-mono text-[11px] uppercase tracking-ops text-brand-600">
-          <span aria-hidden className="block h-px w-7 bg-brand-600" />
-          Field assessment / 72-hour window
-        </div>
+        {SITE.hero.eyebrow && (
+          <div className="flex items-center gap-3.5 font-mono text-[11px] uppercase tracking-ops text-brand-600">
+            <span aria-hidden className="block h-px w-7 bg-brand-600" />
+            {SITE.hero.eyebrow}
+          </div>
+        )}
         <h1
-          className={`${headingClass(SITE)} mt-6 max-w-4xl text-6xl leading-[0.88] text-brand-950 sm:text-7xl lg:text-[104px]`}
+          className={`${headingClass(SITE)} mt-6 max-w-4xl text-[clamp(38px,10.5vw,104px)] leading-[0.88] text-brand-950`}
           style={{ textWrap: "balance" }}
         >
           {SITE.hero.title}
@@ -119,13 +128,18 @@ function BackgroundVideoHero({ videoSrc }: { videoSrc: string }) {
         <div className="mt-10 flex flex-wrap items-center gap-x-6 gap-y-5">
           <Link
             href="/quiz"
-            className="clip-bevel inline-flex items-center justify-center bg-brand-600 px-9 py-4 font-condensed text-lg font-extrabold uppercase tracking-wider text-brand-50 transition hover:bg-brand-600/85 active:scale-[0.99]"
+            className="clip-bevel inline-flex w-full items-center justify-center bg-brand-600 px-9 py-4 font-condensed text-lg font-extrabold uppercase tracking-wider text-brand-50 transition hover:bg-brand-600/85 active:scale-[0.99] sm:w-auto"
           >
             {SITE.hero.ctaLabel}
           </Link>
-          <div className="flex flex-wrap gap-x-6 gap-y-2 font-mono text-[11px] uppercase tracking-ops text-brand-700">
+          <div className="flex flex-wrap gap-2">
             {SITE.hero.benefits.map((benefit) => (
-              <span key={benefit}>{benefit}</span>
+              <span
+                key={benefit}
+                className="border border-brand-600/40 bg-brand-600/[0.08] px-3 py-2 font-mono text-[11px] uppercase tracking-wider text-brand-600"
+              >
+                {benefit}
+              </span>
             ))}
           </div>
         </div>
@@ -136,7 +150,7 @@ function BackgroundVideoHero({ videoSrc }: { videoSrc: string }) {
 
 function HowItWorksStep({ n, title, desc }: { n: number; title: string; desc: string }) {
   return (
-    <div className="bg-brand-100/60 p-8">
+    <div className="bg-brand-100/60 p-6 sm:p-8">
       <div className="font-mono text-xs tracking-ops text-brand-600">
         {String(n).padStart(2, "0")}
       </div>

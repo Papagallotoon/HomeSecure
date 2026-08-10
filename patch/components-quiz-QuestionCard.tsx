@@ -14,7 +14,7 @@ interface QuestionCardProps {
 }
 
 const OPTION_BASE =
-  "flex w-full items-center gap-4 border px-5 py-4 text-left text-[17px] font-medium transition";
+  "flex min-h-[54px] w-full items-center gap-3.5 border px-4 py-4 text-left text-[17px] font-medium transition sm:gap-4 sm:px-5";
 const OPTION_ON = "border-brand-600 bg-brand-600/10 text-brand-950";
 const OPTION_OFF =
   "border-white/[0.12] bg-white/[0.02] text-brand-800 hover:border-brand-600 hover:bg-brand-600/[0.06]";
@@ -30,7 +30,7 @@ export function QuestionCard({ question, value, onAnswer, onNext }: QuestionCard
   );
 
   return (
-    <div className="reticle w-full border border-brand-600/20 bg-brand-100/70 p-8">
+    <div className="reticle w-full border border-brand-600/20 bg-brand-100/70 p-5 sm:p-8">
       <div className="flex items-center gap-3">
         {question.icon && (
           <span className="text-brand-600">
@@ -38,11 +38,11 @@ export function QuestionCard({ question, value, onAnswer, onNext }: QuestionCard
           </span>
         )}
         <span className="font-mono text-[11px] uppercase tracking-ops text-brand-500">
-          {question.id.replace(/_/g, " ")}
+          {question.dimensionLabel ?? question.id.replace(/_/g, " ")}
         </span>
       </div>
 
-      <h2 className={`${headingClass(SITE)} mt-4 text-3xl leading-[1.06] text-brand-950 sm:text-[34px]`}>
+      <h2 className={`${headingClass(SITE)} mt-4 text-[27px] leading-[1.08] text-brand-950 sm:text-[34px]`}>
         {question.prompt}
       </h2>
       {question.helpText && (

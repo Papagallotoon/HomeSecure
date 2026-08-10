@@ -10,7 +10,9 @@ import { readUtmParams } from "@/lib/utm";
 import { QUIZ_ANSWERS_STORAGE_KEY } from "@/components/quiz/QuizFlow";
 import { ScoreDisplay } from "@/components/result/ScoreDisplay";
 import { StrengthsGaps } from "@/components/result/StrengthsGaps";
+import { ReadinessRadar } from "@/components/result/ReadinessRadar";
 import { ProductCard } from "@/components/result/ProductCard";
+import { FurtherTests } from "@/components/result/FurtherTests";
 import { ProductVideo } from "@/components/result/ProductVideo";
 
 export default function ResultPage() {
@@ -90,11 +92,17 @@ export default function ResultPage() {
   const hasRecommendations = result.recommendations.length > 0;
 
   return (
-    <div className={`mx-auto max-w-5xl px-6 py-14 ${hasRecommendations ? "pb-28 sm:pb-20" : ""}`}>
+    <div className={`mx-auto max-w-5xl px-4 py-10 sm:px-6 sm:py-14 ${hasRecommendations ? "pb-28 sm:pb-20" : ""}`}>
       <ScoreDisplay
         scoreLabel={SITE.resultCopy.scoreLabel}
         score={result.score}
         profile={result.profile}
+      />
+
+      <ReadinessRadar
+        title={SITE.resultCopy.mapTitle}
+        strengths={result.strengths}
+        gaps={result.gaps}
       />
 
       <StrengthsGaps
@@ -128,6 +136,17 @@ export default function ResultPage() {
           </div>
         </div>
       )}
+
+      <FurtherTests />
+
+      <div className="mt-9">
+        <Link
+          href="/quiz"
+          className="font-mono text-[11px] uppercase tracking-ops text-brand-500 hover:text-brand-600"
+        >
+          {SITE.resultCopy.rerunLabel}
+        </Link>
+      </div>
 
       {/* CTA collant mobile : la recommandation reste à un tap, sans devoir
           remonter au-dessus du score et des lacunes. */}
