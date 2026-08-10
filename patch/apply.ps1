@@ -13,7 +13,7 @@
 # long). PowerShell 5.1 lit un .ps1 sans BOM en ANSI et un caractere accentue
 # suffit a casser l'analyse syntaxique.
 
-$ErrorActionPreference = 'Stop'
+$ErrorActionPreference = 'Continue'
 
 if (-not (Test-Path '.\package.json')) {
   Write-Host 'ERREUR : lance ce script depuis la racine du repo (package.json introuvable).' -ForegroundColor Red
@@ -28,15 +28,17 @@ if (-not (Test-Path '.\patch')) {
 $dirty = git status --porcelain
 if ($dirty) {
   Write-Host 'Des modifications ne sont pas committees. Je les mets de cote.' -ForegroundColor Yellow
-  git add -A
-  git commit -m 'WIP avant application du patch de templatisation' | Out-Null
+  git add -A 2>&1 | Out-Null
+  git commit -m 'WIP avant application du patch de templatisation' 2>&1 | Out-Null
 }
 
-git rev-parse --verify templatisation 2>$null | Out-Null
-if ($LASTEXITCODE -eq 0) {
-  git checkout templatisation | Out-Null
+# 'git branch --list' n'ecrit jamais sur stderr : pas de faux positif d'erreur.
+$existing = git branch --list templatisation
+if ($existing) {
+  Write-Host 'Branche templatisation deja presente : je m''y place.'
+  git checkout templatisation 2>&1 | Out-Null
 } else {
-  git checkout -b templatisation | Out-Null
+  git checkout -b templatisation 2>&1 | Out-Null
 }
 
 # --- Table de copie : fichier du patch -> destination.
@@ -150,8 +152,8 @@ if ($LASTEXITCODE -ne 0) {
   exit 1
 }
 
-git add -A
-git commit -m 'Moteur templatise : niche par NEXT_PUBLIC_NICHE, registre, garde-fou, theme turquoise, passe mobile' | Out-Null
+git add -A 2>&1 | Out-Null
+git commit -m 'Moteur templatise : niche par NEXT_PUBLIC_NICHE, registre, garde-fou, theme turquoise, passe mobile' 2>&1 | Out-Null
 
 Write-Host ''
 Write-Host '=== Termine ===' -ForegroundColor Green
