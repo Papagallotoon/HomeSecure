@@ -1,7 +1,7 @@
 import type { QuizQuestion } from "@/lib/types";
 
-// Each question maps to one preparedness dimension. Every option adds the
-// same number of points to "score" (the global 0-100 dimension) and to the
+// Each question maps to one dimension declared in scoring.ts. Every option adds
+// the same number of points to "score" (the reserved 0-100 dimension) and to the
 // named dimension, so dimension totals double as strengths/gaps signals.
 function opts(dimension: string) {
   return [
@@ -18,6 +18,7 @@ export const QUESTIONS: QuizQuestion[] = [
     order: 1,
     type: "single",
     icon: "power",
+    dimensionLabel: "Backup power & lighting",
     prompt: "If the power went out tonight, how would your home handle it?",
     helpText: "Think flashlights, batteries, generators, power banks.",
     options: opts("backup_power"),
@@ -27,6 +28,7 @@ export const QUESTIONS: QuizQuestion[] = [
     order: 2,
     type: "single",
     icon: "heart",
+    dimensionLabel: "First aid supplies",
     prompt: "Do you have a stocked first aid kit at home?",
     options: opts("first_aid"),
   },
@@ -35,6 +37,7 @@ export const QUESTIONS: QuizQuestion[] = [
     order: 3,
     type: "single",
     icon: "droplet",
+    dimensionLabel: "Water storage",
     prompt: "How much clean drinking water could your household access without a store?",
     options: opts("water_storage"),
   },
@@ -43,6 +46,7 @@ export const QUESTIONS: QuizQuestion[] = [
     order: 4,
     type: "single",
     icon: "basket",
+    dimensionLabel: "Food supplies",
     prompt: "How many days could you feed your household from what's already at home?",
     options: opts("food_supplies"),
   },
@@ -51,6 +55,7 @@ export const QUESTIONS: QuizQuestion[] = [
     order: 5,
     type: "single",
     icon: "chat",
+    dimensionLabel: "Communication plan",
     prompt: "Could you stay informed or reach help if cell networks went down?",
     helpText: "Radios, backup chargers, a family communication plan.",
     options: opts("communication"),
@@ -60,6 +65,7 @@ export const QUESTIONS: QuizQuestion[] = [
     order: 6,
     type: "single",
     icon: "shield",
+    dimensionLabel: "Home security",
     prompt: "How confident are you in your home's ability to stay secure during a disruption?",
     helpText: "Locks, lighting, visibility, deterrents.",
     options: opts("home_security"),
@@ -69,6 +75,7 @@ export const QUESTIONS: QuizQuestion[] = [
     order: 7,
     type: "single",
     icon: "clipboard",
+    dimensionLabel: "Written emergency plan",
     prompt: "Does your household have a written emergency plan everyone knows?",
     options: opts("emergency_plan"),
   },

@@ -1,3 +1,5 @@
+import { SITE } from "@/config/active";
+
 interface ProgressBarProps {
   current: number;
   total: number;
@@ -14,7 +16,8 @@ export function ProgressBar({ current, total }: ProgressBarProps) {
     <div className="w-full">
       <div className="mb-3 flex items-center justify-between font-mono text-[11px] uppercase tracking-ops text-brand-500">
         <span>
-          Phase {String(current).padStart(2, "0")} / {String(total).padStart(2, "0")}
+          {SITE.quizStepLabel ?? "Step"} {String(current).padStart(2, "0")} /{" "}
+          {String(total).padStart(2, "0")}
         </span>
         <span>{percent}%</span>
       </div>

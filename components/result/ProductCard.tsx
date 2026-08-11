@@ -19,7 +19,7 @@ export function ProductCard({ product, href, matchReason, ctaLabel }: ProductCar
         <img
           src={product.image}
           alt={product.name}
-          className="h-64 w-full object-contain p-6"
+          className="h-56 w-full object-contain p-5 sm:h-64 sm:p-6"
           loading="lazy"
         />
 
@@ -39,11 +39,11 @@ export function ProductCard({ product, href, matchReason, ctaLabel }: ProductCar
         )}
       </div>
 
-      <div className="p-8">
+      <div className="p-5 sm:p-8">
         <div className="font-mono text-[11px] uppercase tracking-ops text-brand-600">
           {product.category.replace(/-/g, " ")}
         </div>
-        <h3 className="mt-2.5 font-condensed text-4xl font-extrabold uppercase leading-none text-brand-950">
+        <h3 className="mt-2.5 font-condensed text-[28px] font-extrabold uppercase leading-[1.02] text-brand-950 sm:text-4xl">
           {product.name}
         </h3>
         <p className="mt-3 max-w-xl text-base leading-relaxed text-brand-700">
@@ -61,13 +61,13 @@ export function ProductCard({ product, href, matchReason, ctaLabel }: ProductCar
           ))}
         </ul>
 
-        <p className="mt-5 border-l-2 border-brand-600 bg-brand-600/[0.07] px-4.5 py-3.5 text-[15px] leading-relaxed text-brand-800">
+        <p className="mt-5 border-l-2 border-brand-600 bg-brand-600/[0.07] px-[18px] py-3.5 text-[15px] leading-relaxed text-brand-800">
           {matchReason}
         </p>
 
         <a
           href={href}
-          className="clip-bevel mt-6 inline-flex items-center justify-center bg-brand-600 px-8 py-4 font-condensed text-lg font-extrabold uppercase tracking-wider text-brand-50 transition hover:bg-brand-600/85"
+          className="clip-bevel mt-6 inline-flex w-full items-center justify-center bg-brand-600 px-8 py-4 font-condensed text-lg font-extrabold uppercase tracking-wider text-brand-50 transition hover:bg-brand-600/85 sm:w-auto"
         >
           {ctaLabel}
         </a>

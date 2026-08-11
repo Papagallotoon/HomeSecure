@@ -1,5 +1,10 @@
 // Core types shared by every niche config. Edit config/niches/* to build a
 // new site — these types should rarely need to change.
+//
+// CONTRAT DE TEMPLATE : tout ce qui est visible à l'écran et dépend du sujet
+// traité doit avoir un champ ici. Si un composant a besoin d'un texte qui
+// n'existe pas dans ces types, la bonne correction est d'ajouter le champ —
+// jamais d'écrire le texte dans le composant.
 
 export type Currency = "EUR" | "USD" | "GBP";
 
@@ -42,7 +47,8 @@ export type QuestionType = "single" | "multiple" | "slider" | "number";
 export interface AnswerOption {
   id: string;
   label: string;
-  /** Dimension id -> points added when this option is selected. */
+  /** Dimension id -> points added when this option is selected.
+   *  La clé "score" est réservée : c'est elle qui alimente le total 0-100. */
   scoreImpact?: Record<string, number>;
 }
 
@@ -73,6 +79,9 @@ export interface QuizQuestion {
    *  above the prompt. Purely visual — the engine ships a small generic set
    *  (shield, droplet, heart, ...); niches just pick whichever fits. */
   icon?: string;
+  /** Libellé court de la dimension, affiché au-dessus de la question.
+   *  Sans lui, le moteur affiche l'id de la question — lisible mais laid. */
+  dimensionLabel?: string;
   type: QuestionType;
   options?: AnswerOption[];
   slider?: SliderConfig;
@@ -95,6 +104,9 @@ export interface ResultProfile {
 export interface DimensionMeta {
   id: string;
   label: string;
+  /** Étiquette d'axe du diagramme radar : très court, 8 caractères max.
+   *  Défaut : `label` en majuscules. */
+  shortLabel?: string;
   /** Raw points at/above which this dimension counts as a "strength". */
   strengthThreshold: number;
 }
@@ -125,6 +137,15 @@ export interface HowItWorksStep {
   description: string;
 }
 
+/** Carte du bloc passerelle en bas de la page résultat. Vide = bloc masqué. */
+export interface FurtherTest {
+  /** Étiquette mono, ex. "Test 02 — 60 sec". */
+  label: string;
+  title: string;
+  description: string;
+  href: string;
+}
+
 export interface SiteConfig {
   siteId: string;
   siteName: string;
@@ -140,8 +161,16 @@ export interface SiteConfig {
      *  niches). Applied to the hero title, score headline, and question
      *  prompts — the few places the engine renders a "display" heading. */
     headingFont: "sans-bold" | "serif";
+    /** Lettre du bloc logo. Défaut : première lettre de siteName. */
+    logoLetter?: string;
   };
+  /** Libellé mono à droite du nom dans l'en-tête. Omis = rien d'affiché. */
+  headerTagline?: string;
+  /** Voyant "en ligne" de l'en-tête. Omis = voyant masqué. */
+  headerStatus?: string;
   hero: {
+    /** Sur-titre mono au-dessus du titre. Omis = ligne masquée. */
+    eyebrow?: string;
     title: string;
     subtitle: string;
     ctaLabel: string;
@@ -155,21 +184,52 @@ export interface SiteConfig {
   /** Optional "how it works" steps on the landing page. Omit or leave empty
    *  to skip the section entirely. */
   howItWorks: HowItWorksStep[];
+  /** Titre de la section "comment ça marche". Omis = section sans titre. */
+  howItWorksTitle?: string;
   quizIntro: {
     title: string;
   };
+  /** Libellé du compteur de progression du quiz, ex. "Phase". */
+  quizStepLabel?: string;
   resultCopy: {
     scoreLabel: string;
+    /** Étiquette du badge de profil, ex. "Classification". */
+    classificationLabel: string;
     strengthsTitle: string;
+    /** Affiché quand le visiteur n'a AUCUNE force confirmée. */
+    strengthsEmpty: string;
     gapsTitle: string;
+    /** Affiché quand le visiteur n'a AUCUNE lacune. */
+    gapsEmpty: string;
+    /** Titre du bloc diagramme (carte des dimensions). */
+    mapTitle: string;
+    /** Phrase de synthèse quand aucune dimension n'est critique. */
+    mapAllClear: string;
+    /** Synthèse du maillon faible. Utiliser "{dimension}" comme substitut. */
+    mapWeakestTemplate: string;
     recommendationTitle: string;
     /** CTA label on the product card and sticky mobile bar. */
     productCtaLabel: string;
+    /** Lien discret pour refaire le test. */
+    rerunLabel: string;
     /** Match explanation shown above the CTA. Use "{gaps}" as a placeholder
      *  for up to two of the visitor's actual gap labels. */
     matchReasonTemplate: string;
     /** Shown instead of matchReasonTemplate when the visitor has no gaps. */
     matchReasonFallback: string;
+  };
+  /** Bloc passerelle vers les autres tests. Omis ou vide = bloc masqué. */
+  furtherTests?: {
+    eyebrow: string;
+    title: string;
+    subtitle: string;
+    tests: FurtherTest[];
+  };
+  /** Mentions légales. Obligatoire : l'affiliation doit être déclarée. */
+  legal: {
+    affiliateDisclosure: string;
+    footerNote: string;
+    links: { label: string; href: string }[];
   };
 }
 

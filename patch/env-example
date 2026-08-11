@@ -1,6 +1,0 @@
-# Niche servie par ce déploiement. Doit correspondre à une clé de
-# config/registry.ts. Absente ou inconnue : repli sur readyscore + avertissement.
-#
-# Un déploiement Vercel par niche, même repo, même branche — seule cette ligne
-# change entre les deux projets Vercel.
-NEXT_PUBLIC_NICHE=readyscore

@@ -1,8 +1,12 @@
 import type { SiteConfig } from "./types";
 
-/** Tailwind classes for the active niche's display heading style. */
+/** Classes Tailwind du style de titre de la niche active. */
 export function headingClass(site: Pick<SiteConfig, "branding">): string {
   return site.branding.headingFont === "sans-bold"
-    ? "font-sans font-black uppercase tracking-tight"
+    ? "font-condensed font-extrabold uppercase tracking-tight"
     : "font-serif font-semibold";
 }
+
+/** Libellé opérationnel monospace — eyebrows, compteurs, statuts. */
+export const opsLabel =
+  "font-mono text-[11px] uppercase tracking-ops text-brand-500";

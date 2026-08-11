@@ -32,13 +32,15 @@ export const SCORING: ScoringConfig = {
         "You've covered most of the essentials. A few upgrades would take you from well-prepared to fully self-sufficient for the first critical days.",
     },
   ],
+  // `shortLabel` est l'étiquette d'axe du diagramme radar : 8 caractères max,
+  // sinon elle déborde du cadre sur mobile.
   dimensions: [
-    { id: "backup_power", label: "Backup power & lighting", strengthThreshold: 2 },
-    { id: "first_aid", label: "First aid supplies", strengthThreshold: 2 },
-    { id: "water_storage", label: "Water storage", strengthThreshold: 2 },
-    { id: "food_supplies", label: "Food supplies", strengthThreshold: 2 },
-    { id: "communication", label: "Communication plan", strengthThreshold: 2 },
-    { id: "home_security", label: "Home security", strengthThreshold: 2 },
-    { id: "emergency_plan", label: "Written emergency plan", strengthThreshold: 2 },
+    { id: "backup_power", label: "Backup power & lighting", shortLabel: "Power", strengthThreshold: 2 },
+    { id: "first_aid", label: "First aid supplies", shortLabel: "Medical", strengthThreshold: 2 },
+    { id: "water_storage", label: "Water storage", shortLabel: "Water", strengthThreshold: 2 },
+    { id: "food_supplies", label: "Food supplies", shortLabel: "Food", strengthThreshold: 2 },
+    { id: "communication", label: "Communication plan", shortLabel: "Comms", strengthThreshold: 2 },
+    { id: "home_security", label: "Home security", shortLabel: "Security", strengthThreshold: 2 },
+    { id: "emergency_plan", label: "Written emergency plan", shortLabel: "Plan", strengthThreshold: 2 },
   ],
 };
