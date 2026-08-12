@@ -1,0 +1,260 @@
+================================================================================
+BRIEF PROJET — HOMESECURE, MOTEUR DE TESTS AFFILIÉS
+À coller en début de conversation avec n'importe quel LLM pour qu'il reprenne le
+projet sans contexte préalable. Écrit en août 2026.
+================================================================================
+
+
+## 1. CE QUE C'EST, EN TROIS PHRASES
+
+Un site qui pose 7 questions à un visiteur, calcule un score sur 100, lui montre
+ses points faibles, et lui recommande un produit affilié qui répond précisément
+à ces points faibles. Le visiteur ne crée pas de compte et ne donne pas d'email.
+Le revenu vient de la commission sur les ventes générées via le lien affilié.
+
+Le projet est porté par une seule personne, en solo, avec un budget publicitaire
+initial de 200 €. L'objectif immédiat est la première vente ; l'objectif de
+structure est de pouvoir relancer le même moteur sur d'autres sujets sans
+réécrire de code.
+
+
+## 2. LE PRINCIPE ARCHITECTURAL, LE SEUL QUI COMPTE
+
+    LE MOTEUR NE CONNAÎT PAS LE SUJET DU TEST.
+    Une « niche » est un dossier de configuration. Rien d'autre.
+
+Aucune chaîne visible par un visiteur, aucun nom de variable, aucun type ne doit
+mentionner un sujet dans `app/`, `components/` ou `lib/`. Tout ce qui dépend du
+sujet vit sous `config/niches/<slug>/`.
+
+Corollaire opérationnel, à répéter à tout agent qui touche au code : si un
+composant a besoin d'un texte qui n'existe pas dans `lib/types.ts`, la bonne
+correction est d'AJOUTER LE CHAMP de configuration — jamais d'écrire le texte
+dans le composant.
+
+Deux niches existent aujourd'hui :
+
+- **readyscore** — préparation du foyer à une coupure de 72 h (électricité, eau,
+  nourriture, communication, sécurité). Thème sombre charbon + turquoise, titres
+  en capitales condensées. C'est la niche ACTIVE, publiée sous le nom
+  **HomeSecure** (le slug technique reste `readyscore` ; le nom de marque
+  affiché vient de `SITE.siteName` — ne pas renommer le slug pour autant).
+- **growready** — autonomie alimentaire à la maison (lumière, espace, temps,
+  arrosage). Thème clair végétal, titres serif. Configurée, déclarée, NON
+  ACTIVÉE.
+
+Ces deux niches partagent 100 % du code. Ce contraste volontaire — sombre/clair,
+capitales/serif, sécurité/jardinage — est le test de la refactorisation : si
+`NEXT_PUBLIC_NICHE=growready` donne un site cohérent sans qu'une ligne de
+`app/`, `components/` ou `lib/` ne change, le moteur est bien agnostique.
+
+
+## 3. STACK ET STRUCTURE
+
+Next.js 14 (App Router), TypeScript, Tailwind 3. Pas de base de données, pas
+d'authentification, pas d'email. Les réponses au test vivent en `sessionStorage`
+et ne quittent jamais le navigateur. Déploiement Vercel.
+
+    config/
+      active.ts          Résout la niche depuis NEXT_PUBLIC_NICHE. SEUL point
+                         d'entrée importé par app/, components/ et lib/.
+      registry.ts        Table slug -> configuration. Ajouter une niche =
+                         ajouter une ligne ici.
+      niches/<slug>/
+        site.ts          branding, palette, hero, copie de résultat, légal
+        quiz.ts          questions, options, points, icônes
+        scoring.ts       dimensions, seuils, profils de résultat
+        products.ts      produits affiliés + ciblage par profil
+        content.ts       angles de contenu court (non rendus par le site)
+
+    lib/
+      types.ts           LE CONTRAT. Tout champ configurable y est décrit.
+      scoring.ts         Moteur pur : (questions, réponses, scoring) -> résultat
+      validateNiche.ts   Garde-fou de configuration
+      color.ts           hex -> canaux RGB, pour les custom properties
+      analytics.ts, utm.ts, video.ts, heading.ts, serverTrack.ts
+
+    components/          UI. Zéro référence à un sujet.
+      layout/            Header, Footer, AnalyticsScripts, TrackOnMount
+      quiz/              QuizFlow, ProgressBar, QuestionCard
+      result/            ScoreDisplay, ScoreGauge, StrengthsGaps,
+                         ReadinessRadar, FurtherTests, ProductCard, ProductVideo
+      ui/                Button, Icon (jeu d'icônes générique)
+
+    app/
+      page.tsx           landing
+      quiz/              parcours en 7 étapes
+      result/            score, radar, forces/lacunes, produit, passerelle
+      go/[slug]/         redirection affiliée (ajoute la campagne + les UTM)
+      privacy, terms, affiliate-disclosure, robots.ts, sitemap.ts
+
+Bascule de niche : `NEXT_PUBLIC_NICHE=readyscore` dans `.env.local`. Next
+remplace `process.env.NEXT_PUBLIC_*` à la compilation. Sur Vercel : un projet
+par niche, même repo, même branche, seule la variable diffère.
+
+Repo : `github.com/Papagallotoon/HomeSecure`, branche `main`.
+
+
+## 4. LE SCORING
+
+Chaque option de réponse attribue des points à DEUX clés :
+
+    scoreImpact: { score: 2, water_storage: 2 }
+                   ^^^^^ réservé : alimente le total 0-100
+                            ^^^^^^^^^^^^^ la dimension, pour forces/lacunes
+
+- `score` est un identifiant RÉSERVÉ. Une question qui ne l'alimente pas ne
+  compte pas dans le total. C'est l'erreur classique.
+- `scoring.maxRawScore` = nb de questions × points max par question. Faux ici,
+  et tous les scores affichés sont faux.
+- `dimensions[].strengthThreshold` = points à partir desquels la dimension est
+  une force ; en dessous, c'est une lacune.
+- `dimensions[].shortLabel` = étiquette d'axe du radar, 8 caractères maximum,
+  sinon elle déborde du cadre sur mobile.
+- `profiles` doivent couvrir 0→100 sans trou ni chevauchement.
+- `products[].recommendedFor` cite des ids de profils ; le classement se fait
+  ensuite sur `netRevenuePerSale` (champ interne, jamais affiché au visiteur).
+
+`lib/validateNiche.ts` vérifie tout cela au chargement : il échoue en
+développement en nommant le champ fautif (dimension citée mais non déclarée,
+question qui n'alimente pas `score`, profils qui ne couvrent pas 0–100, produit
+ciblant un profil inexistant, lien affilié resté en placeholder), et journalise
+sans casser en production — un visiteur ne voit jamais un écran blanc pour une
+virgule manquante.
+
+
+## 5. LA DIRECTION VISUELLE, ET POURQUOI LA PALETTE EST INVERSÉE
+
+`tailwind.config.ts` mappe `brand-50` … `brand-950` sur des custom properties CSS
+que `app/layout.tsx` injecte d'après la palette de la niche active. Changer de
+niche change donc toute la palette sans qu'aucune classe Tailwind ne change de
+nom.
+
+Pour que cela fonctionne avec un thème clair ET un thème sombre, la convention
+est **sémantique, pas chromatique** :
+
+    brand-50   = FOND DE PAGE       (charbon en sombre, blanc cassé en clair)
+    brand-100  = surfaces, séparateurs
+    brand-600  = ACCENT             (CTA, jauge, sélection)
+    brand-700  = texte secondaire
+    brand-950  = TEXTE LE PLUS FORT (sable clair en sombre, presque noir en clair)
+
+Une niche sombre a donc une rampe INVERSÉE (50 sombre → 950 clair), une niche
+claire une rampe normale. `bg-brand-50` veut dire « fond » dans les deux cas.
+NE PAS casser cette convention, NE PAS renommer les classes `brand-*` : c'est le
+seul pont entre le thème et l'UI.
+
+Palette readyscore :
+
+    50 #0a0b0a · 100 #1a1d1a · 200 #22261f · 300 #3a3e36 · 400 #5f5a50
+    500 #8c8778 · 600 #56B3A2 (accent turquoise) · 700 #a8a294
+    800 #d8d3c7 · 900 #efeae0 · 950 #f2eee5
+
+Typographie : Barlow Condensed 700/800 en capitales pour les titres, Barlow pour
+le corps, IBM Plex Mono 10–12 px avec `letter-spacing: .2em` pour les étiquettes
+opérationnelles.
+
+Signature visuelle : équerres d'angle en L, barre de progression segmentée,
+petits carrés plutôt que des ronds, coin coupé en `clip-path` sur le logo.
+Registre « instrument de mesure », pas « boutique ». Jamais de dégradé agressif,
+jamais d'emoji.
+
+
+## 6. MOBILE — 80 % DU TRAFIC
+
+Ce sont des acquis, à ne pas perdre dans une refactorisation :
+
+- tailles de titres en `clamp()`, jamais une seule taille fixe
+- CTA pleine largeur sous `sm` (`w-full sm:w-auto`)
+- options de quiz à `min-h-[54px]` ; toute cible tactile ≥ 44 px
+- paddings réduits sous `sm` (`p-5 sm:p-8`)
+- radar et fiche produit passent en une colonne
+- CTA collant en bas de la page résultat, masqué au-dessus de `sm`
+- vérification à 390 px de large avant tout déploiement
+
+
+## 7. CONTRAINTES DE FOND, NON NÉGOCIABLES
+
+- **Aucune promesse médicale, financière ou de santé**, quel que soit le sujet.
+  Un produit peut s'appeler « medicinal garden kit » : le site parle de le
+  cultiver, jamais de ses effets.
+- **Aucun chiffre inventé.** Le seul chiffre montré au visiteur est son propre
+  score, calculé à partir de ses propres réponses. Pas de « 87 % des foyers
+  sont… », pas de faux compteur de participants, pas de faux avis.
+- **La raison du match cite les lacunes réelles du visiteur**, rien d'autre.
+- **La mention d'affiliation reste visible** sur la page résultat, et les liens
+  passent par `/go/[slug]`. Obligation légale, pas une option de configuration.
+- **Le profil bas ne doit jamais humilier** : il constate et propose une
+  première action. Un visiteur doit pouvoir répondre honnêtement sans se sentir
+  jugé — c'est la condition d'un score utile.
+
+
+## 8. CRÉER UNE NICHE — LE CAS D'USAGE NORMAL
+
+Dupliquer `config/niches/growready/` sous un nouveau slug, remplir les cinq
+fichiers, ajouter une ligne dans `config/registry.ts`, lancer
+`NEXT_PUBLIC_NICHE=<slug> npm run dev`. Rien d'autre.
+
+Ce qu'on te donne quand on te demande une niche : le sujet, ce que le test
+mesure, le type de produit affilié, le registre de ton. Ce que tu produis :
+
+1. 7 questions, une par dimension, du plus concret au plus engageant.
+   Deuxième personne, jamais culpabilisant.
+2. 4 niveaux de réponse par question, avec des libellés adaptés au sujet — pas
+   un barème générique recopié.
+3. 3 profils de résultat couvrant 0–100.
+4. Une palette cohérente avec le sujet, respectant la convention sémantique de
+   la section 5, et le bon `headingFont` (`sans-bold` ou `serif`).
+5. Toute la copie de résultat : étiquettes, états vides, synthèse du maillon
+   faible, raison du match.
+6. 10 angles de contenu court dans `content.ts` : une idée utile en accroche, le
+   test gratuit en CTA. Jamais « achète ça » en accroche.
+
+
+## 9. VÉRIFICATION, DANS CET ORDRE
+
+    cp .env.example .env.local
+    npm run typecheck
+    npm run build
+    npm run dev                        # landing → quiz → result, en 390 px
+    NEXT_PUBLIC_NICHE=growready npm run dev
+
+La dernière commande est le vrai test du template. Terminer en cherchant, dans
+`app/`, `components/` et `lib/`, les termes : `readyscore`, `growready`,
+`looter`, `prepared`, `prepper`, `72-hour`, `blackout`, `first aid`,
+`water storage`, `home defense`, `gardening`, `sunlight`. Le résultat doit être
+vide, hors commentaires de documentation.
+
+Un échec attendu au premier lancement de growready : son produit a encore
+`affiliateUrl: "AFFILIATE_URL_PLACEHOLDER"`. Mettre le vrai lien, ou passer le
+produit en `active: false`. C'est le garde-fou qui fonctionne, pas un bug.
+
+
+## 10. ÉTAT D'AVANCEMENT (août 2026)
+
+Fait :
+- moteur agnostique, bascule par variable d'environnement, registre, garde-fou
+- direction visuelle « instrument de mesure » turquoise, passe mobile complète
+- diagramme radar des dimensions sur la page résultat
+- carrousel produit (lecture auto 4,2 s, arrêt à la première interaction)
+- niche readyscore complète, niche growready prête et non activée
+- déploiement Vercel
+
+Reste à faire :
+- vrais visuels produits (les images actuelles sont des SVG de substitution)
+- vrais liens affiliés Digistore24 pour growready
+- première campagne de trafic, budget 200 €
+- mesure : taux de complétion du test, taux de clic vers le lien affilié
+
+
+## 11. COMMENT TRAVAILLER SUR CE PROJET
+
+- Ne change aucun rendu visuel existant sans qu'on te le demande. Si tu repères
+  un bug visuel, signale-le, ne le corrige pas dans le même passage.
+- Pas de nouvelle dépendance npm.
+- Commits petits et nommés, un par étape.
+- Si une décision d'architecture est ambiguë, pose la question avant de coder :
+  une mauvaise abstraction coûte plus cher qu'un aller-retour.
+- Livrable attendu après toute refactorisation : un tableau des fichiers
+  touchés, et pour chacun ce qui en est sorti et vers quel champ de
+  configuration ça a migré.
