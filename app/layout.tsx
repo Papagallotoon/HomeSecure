@@ -26,6 +26,9 @@ export const metadata: Metadata = {
     description: SITE.siteDescription,
   },
   robots: { index: true, follow: true },
+  icons: {
+    icon: [{ url: "/icon.svg", type: "image/svg+xml" }],
+  },
 };
 
 // Chaque niche définit sa propre palette (config/niches/<niche>/site.ts).
