@@ -4,6 +4,8 @@ import { buildAffiliateUrl, readUtmParams } from "@/lib/utm";
 import { logServerEvent } from "@/lib/serverTrack";
 
 export const dynamic = "force-dynamic";
+export const runtime = 'edge';
+
 
 export async function GET(
   request: NextRequest,
