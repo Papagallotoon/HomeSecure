@@ -3,7 +3,7 @@ import { SITE } from "@/config/active";
 
 export function Footer() {
   return (
-    <footer className="relative z-10 border-t border-white/[0.09] py-8">
+    <footer className="relative z-10 border-t border-brand-200 py-8">
       <div className="mx-auto max-w-6xl px-6">
         <p className="max-w-xl text-[13px] leading-relaxed text-brand-500">
           {SITE.legal.affiliateDisclosure}

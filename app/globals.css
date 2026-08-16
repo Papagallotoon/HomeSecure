@@ -3,7 +3,8 @@
 @tailwind utilities;
 
 /* Palette de secours si une niche n'a pas de branding.colors —
-   app/layout.tsx l'écrase normalement à chaque requête. */
+   app/layout.tsx l'écrase normalement à chaque requête.
+   Direction kaki clair : 50 = fond de page, 950 = texte fort. */
 :root {
   --brand-50: 230 225 209;
   --brand-100: 241 237 225;
@@ -28,9 +29,21 @@ body {
 }
 
 /* Camouflage kaki clair : bruit fractal désaturé puis quantifié en 4 paliers.
-   Les paliers sont hauts (0.74 - 0.94) donc les taches restent claires ; le
-   biais chaud vient du rouge et du vert au-dessus du bleu. La désaturation
-   AVANT quantification est ce qui garde les taches sable plutôt que colorées. */
+   Les paliers sont hauts (0.73 - 0.94) donc les taches restent sable ; le biais
+   chaud vient du rouge et du vert au-dessus du bleu. La désaturation AVANT
+   quantification est ce qui garde les taches neutres — quantifier R/G/B
+   indépendamment sur du bruit non désaturé produit des couleurs aléatoires.
+
+   Porté par le body en background-attachment: fixed : le motif ne défile pas,
+   ce qui évite les coutures entre sections. */
+.camo-page {
+  background-color: #e6e1d1;
+  background-image: url("data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20width=%27640%27%20height=%27640%27%3E%3Cfilter%20id=%27c%27%3E%3CfeTurbulence%20type=%27fractalNoise%27%20baseFrequency=%270.008%27%20numOctaves=%274%27%20seed=%2717%27/%3E%3CfeColorMatrix%20type=%27saturate%27%20values=%270%27/%3E%3CfeComponentTransfer%3E%3CfeFuncR%20type=%27discrete%27%20tableValues=%270.902%200.847%200.941%200.875%27/%3E%3CfeFuncG%20type=%27discrete%27%20tableValues=%270.882%200.824%200.925%200.851%27/%3E%3CfeFuncB%20type=%27discrete%27%20tableValues=%270.820%200.737%200.874%200.776%27/%3E%3CfeFuncA%20type=%27discrete%27%20tableValues=%271%27/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Crect%20width=%27640%27%20height=%27640%27%20filter=%27url%28%23c%29%27/%3E%3C/svg%3E");
+  background-size: 640px 640px;
+  background-attachment: fixed;
+}
+
+/* Ancien camouflage plein cadre du tunnel de quiz, en version claire. */
 .camo-zone {
   position: absolute;
   inset: 0;
@@ -41,8 +54,8 @@ body {
   pointer-events: none;
 }
 
-/* Voile léger : sur fond clair il suffit d'un tiers d'opacité pour que le
-   texte passe, et les taches restent lisibles. */
+/* Voile léger : sur fond clair un tiers d'opacité suffit à faire passer le
+   texte, et les taches restent lisibles. */
 .camo-veil {
   position: absolute;
   inset: 0;
@@ -105,6 +118,15 @@ body {
   border-right: 2px solid;
 }
 
+/* Visuels éditoriaux : les onze prises de public/images ont été tirées en clé
+   sombre. Sur fond kaki clair elles demandent une remontée. */
+.editorial-shot {
+  filter: brightness(1.42) contrast(0.94) saturate(0.88);
+}
+.editorial-shot-dark {
+  filter: brightness(2.05) contrast(0.78) saturate(0.8);
+}
+
 @keyframes fadeInUp {
   from {
     opacity: 0;
@@ -118,13 +140,4 @@ body {
 
 .quiz-question-enter {
   animation: fadeInUp 220ms ease-out;
-}
-
-/* Visuels éditoriaux : les prises ont été tirées en clé sombre, on les remonte
-   pour qu'elles tiennent sur fond kaki clair. */
-.editorial-shot {
-  filter: brightness(1.42) contrast(0.94) saturate(0.88);
-}
-.editorial-shot--dark {
-  filter: brightness(2.05) contrast(0.78) saturate(0.8);
 }

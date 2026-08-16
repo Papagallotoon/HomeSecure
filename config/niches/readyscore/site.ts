@@ -2,32 +2,30 @@ import type { SiteConfig } from "@/lib/types";
 
 export const SITE: SiteConfig = {
   siteId: "readyscore",
-  siteName: "ReadyScore",
+  siteName: "Home-Secure",
   siteDescription:
     "Get a hard readiness score on your home for a 72-hour disruption — in 60 seconds.",
   niche: "home preparedness",
   locale: "en",
   domain: "readyscore.example.com",
   analytics: { gaMeasurementId: "G-6WW78QXRLW" },
-  // Direction "Tactical" : charbon + turquoise.
+  // Direction "Tactical" en clé claire : kaki + turquoise foncé.
   //
-  // Rampe kaki clair : 50 = fond de page (le plus clair), 950 = texte le plus
-  // sombre. Sens des classes inchangé (bg-brand-50 = surface, text-brand-950 =
-  // texte fort), seule la valeur bascule du sombre vers le clair.
-  // 50 = fond de page, 950 = texte fort,
-  // 600 = l'accent turquoise. Les composants utilisent bg-brand-50 pour les
-  // surfaces et text-brand-950 pour le texte fort — ces classes gardent donc
-  // exactement le même sens, sans aucune modification.
+  // 50 = fond de page (le plus clair), 950 = texte fort (le plus sombre),
+  // 600 = l'accent turquoise. Le SENS des classes est inchangé — bg-brand-50
+  // reste la surface, text-brand-950 le texte fort — seules les valeurs
+  // basculent du sombre vers le clair, donc aucun composant ne change.
   branding: {
     headingFont: "sans-bold",
+    logoLetter: "H",
     colors: {
       "50": "#e6e1d1",  // fond de page — kaki clair
       "100": "#f1ede1", // cartes, surfaces surélevées
-      "200": "#dcd6c3", // bordures visibles
-      "300": "#c9c2ad", // bordures au survol
+      "200": "#dcd6c3", // filets, bordures
+      "300": "#c9c2ad", // bordures marquées, tirets
       "400": "#8a8f93", // texte désactivé
-      "500": "#6b7074", // texte secondaire faible
-      "600": "#0E7C6E", // ACCENT turquoise — CTA, jauge, sélection
+      "500": "#6b7074", // libellés mono, texte secondaire faible
+      "600": "#0e7c6e", // ACCENT turquoise — CTA, jauge, sélection
       "700": "#5c6266", // texte secondaire
       "800": "#33383c", // texte courant
       "900": "#23272a", // titres
@@ -35,6 +33,7 @@ export const SITE: SiteConfig = {
     },
   },
   headerTagline: "Home Defense Index",
+  // Monogramme de la pastille turquoise du header.
   headerStatus: "Assessment online",
   hero: {
     eyebrow: "Field assessment / 72-hour window",

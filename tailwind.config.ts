@@ -37,8 +37,9 @@ const config: Config = {
         condensed: ["Barlow Condensed", "Oswald", "Impact", "sans-serif"],
         // Les libellés opérationnels (PHASE 03 / 07, READINESS INDEX...)
         mono: ["IBM Plex Mono", "ui-monospace", "SFMono-Regular", "Menlo", "monospace"],
-        // Conservé pour les niches éditoriales (growready).
-        serif: ["Iowan Old Style", "Palatino Linotype", "URW Palladio L", "P052", "serif"],
+        // Corps de texte éditorial : Newsreader à 19px sur les chapôs, 15px
+        // sur les brèves. Le mono reste réservé aux étiquettes techniques.
+        serif: ["Newsreader", "Iowan Old Style", "Palatino Linotype", "Georgia", "serif"],
       },
       letterSpacing: {
         ops: "0.2em",

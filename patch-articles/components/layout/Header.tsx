@@ -36,7 +36,7 @@ export function Header() {
               </Link>
             ))}
             <Link
-              href="/quiz"
+              href="/assessment"
               className="clip-bevel flex min-h-[44px] items-center bg-brand-600 px-4 py-3 text-white hover:bg-brand-600/85"
             >
               Score my home
