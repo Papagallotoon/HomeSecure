@@ -2,36 +2,38 @@ import type { SiteConfig } from "@/lib/types";
 
 export const SITE: SiteConfig = {
   siteId: "readyscore",
-  siteName: "ReadyScore",
+  siteName: "Home-Secure",
   siteDescription:
     "Get a hard readiness score on your home for a 72-hour disruption — in 60 seconds.",
   niche: "home preparedness",
   locale: "en",
   domain: "readyscore.example.com",
-  // Direction "Tactical" : charbon + turquoise.
+  analytics: { gaMeasurementId: "G-6WW78QXRLW" },
+  // Direction "Tactical" en clé claire : kaki + turquoise foncé.
   //
-  // La rampe est VOLONTAIREMENT inversée par rapport aux niches claires :
-  // 50 = le plus sombre (fond de page), 950 = le plus clair (texte fort),
-  // 600 = l'accent turquoise. Les composants utilisent bg-brand-50 pour les
-  // surfaces et text-brand-950 pour le texte fort — ces classes gardent donc
-  // exactement le même sens, sans aucune modification.
+  // 50 = fond de page (le plus clair), 950 = texte fort (le plus sombre),
+  // 600 = l'accent turquoise. Le SENS des classes est inchangé — bg-brand-50
+  // reste la surface, text-brand-950 le texte fort — seules les valeurs
+  // basculent du sombre vers le clair, donc aucun composant ne change.
   branding: {
     headingFont: "sans-bold",
+    logoLetter: "H",
     colors: {
-      "50": "#0a0b0a",  // fond de page
-      "100": "#1a1d1a", // filets, séparateurs, surfaces plates
-      "200": "#22261f", // bordures visibles
-      "300": "#3a3e36", // bordures au survol
-      "400": "#5f5a50", // texte désactivé
-      "500": "#8c8778", // texte secondaire faible
-      "600": "#56B3A2", // ACCENT turquoise — CTA, jauge, sélection
-      "700": "#a8a294", // texte secondaire
-      "800": "#d8d3c7", // texte courant
-      "900": "#efeae0", // titres
-      "950": "#f2eee5", // texte le plus fort
+      "50": "#e6e1d1",  // fond de page — kaki clair
+      "100": "#f1ede1", // cartes, surfaces surélevées
+      "200": "#dcd6c3", // filets, bordures
+      "300": "#c9c2ad", // bordures marquées, tirets
+      "400": "#8a8f93", // texte désactivé
+      "500": "#6b7074", // libellés mono, texte secondaire faible
+      "600": "#0e7c6e", // ACCENT turquoise — CTA, jauge, sélection
+      "700": "#5c6266", // texte secondaire
+      "800": "#33383c", // texte courant
+      "900": "#23272a", // titres
+      "950": "#1b1e21", // texte le plus fort
     },
   },
   headerTagline: "Home Defense Index",
+  // Monogramme de la pastille turquoise du header.
   headerStatus: "Assessment online",
   hero: {
     eyebrow: "Field assessment / 72-hour window",
