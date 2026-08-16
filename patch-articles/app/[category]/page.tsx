@@ -52,7 +52,7 @@ export default function CategoryPage({ params }: { params: { category: string } 
         </span>
         {CATEGORY_ORDER.filter((key) => key !== params.category).map((key) => (
           <Link key={key} href={`/${key}`} className="text-brand-500 hover:text-brand-600">
-            {CATEGORIES[key].label} →
+            {CATEGORIES[key]!.label} →
           </Link>
         ))}
       </div>

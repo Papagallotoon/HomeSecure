@@ -77,10 +77,10 @@ export default function ArticlePage({ params }: { params: { category: string; sl
               href={`/${article.category}`}
               className="mt-3 block font-condensed text-[22px] font-bold uppercase leading-[1.06] text-brand-900 hover:text-brand-600"
             >
-              All {CATEGORIES[article.category].label.toLowerCase()} articles →
+              All {CATEGORIES[article.category]!.label.toLowerCase()} articles →
             </Link>
             <p className="mt-2 font-serif text-[15px] leading-[1.5] text-brand-700">
-              {CATEGORIES[article.category].blurb}
+              {CATEGORIES[article.category]!.blurb}
             </p>
           </div>
         </aside>
@@ -93,7 +93,7 @@ export default function ArticlePage({ params }: { params: { category: string; sl
               Read next
             </h2>
             <Link
-              href={articleHref(related[0])}
+              href={articleHref(related[0]!)}
               className="font-mono text-[10px] uppercase tracking-ops text-brand-600"
             >
               Most relevant →

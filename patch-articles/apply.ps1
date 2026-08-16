@@ -72,6 +72,15 @@ if ($missing.Count -gt 0) {
   $missing | ForEach-Object { Write-Host ('  - {0}' -f $_) -ForegroundColor Yellow }
 }
 
+# On supprime les dossiers patch AVANT le typecheck : sans ca les fichiers
+# copies restent visibles a tsc en double et polluent le rapport d'erreurs.
+foreach ($dead in @('patch-articles','patch-editorial','patch-theme','patch')) {
+  if (Test-Path $dead) {
+    Remove-Item -LiteralPath $dead -Recurse -Force
+    Write-Host ('  dossier {0} supprime' -f $dead) -ForegroundColor Green
+  }
+}
+
 Write-Host ''
 Write-Host '=== npm run typecheck ===' -ForegroundColor Cyan
 npm run typecheck
@@ -90,8 +99,8 @@ if ($LASTEXITCODE -ne 0) {
   exit 1
 }
 
-Remove-Item -LiteralPath 'patch-articles' -Recurse -Force
-Write-Host '  dossier patch-articles supprime' -ForegroundColor Green
+Remove-Item -LiteralPath 'patch-articles' -Recurse -Force -ErrorAction SilentlyContinue
+Write-Host '  nettoyage final effectue' -ForegroundColor Green
 
 git add -A 2>&1 | Out-Null
 git commit -m 'Home-Secure : hubs, articles illustres, evaluation chiffree' 2>&1 | Out-Null

@@ -136,7 +136,10 @@ export default function HomePage() {
           <div className="min-w-0 flex-1 basis-[440px]">
             <div className={RULE}>
               <h2 className={HEADING}>{EDITORIAL.latestTitle}</h2>
-              <Link href="#" className="font-mono text-[10px] uppercase tracking-ops text-brand-600">
+              <Link
+                href={EDITORIAL.latestAllHref}
+                className="font-mono text-[10px] uppercase tracking-ops text-brand-600"
+              >
                 {EDITORIAL.latestAllLabel}
               </Link>
             </div>
@@ -178,7 +181,7 @@ export default function HomePage() {
                 {EDITORIAL.quizCard.body}
               </p>
               <Link
-                href="/quiz"
+                href="/assessment"
                 className="clip-bevel mt-4 flex min-h-[48px] items-center justify-center bg-brand-600 px-5 py-3.5 font-condensed text-[17px] font-extrabold uppercase tracking-[0.06em] text-white hover:bg-brand-600/85"
               >
                 {EDITORIAL.quizCard.cta}

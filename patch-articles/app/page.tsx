@@ -78,7 +78,7 @@ export default function HomePage() {
                   <div className="min-w-0">
                     <div
                       className="font-mono text-[10px] uppercase tracking-ops"
-                      style={{ color: CATEGORIES[article.category].color }}
+                      style={{ color: CATEGORIES[article.category]!.color }}
                     >
                       {article.kicker}
                     </div>
@@ -115,7 +115,7 @@ export default function HomePage() {
             >
               <div
                 className="font-mono text-[11px] tracking-ops"
-                style={{ color: CATEGORIES[hub.category].color }}
+                style={{ color: CATEGORIES[hub.category]!.color }}
               >
                 {hub.index}
               </div>

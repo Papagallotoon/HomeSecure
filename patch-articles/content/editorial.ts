@@ -59,8 +59,8 @@ export const HUBS: Hub[] = CATEGORY_ORDER.map((key, i) => ({
   href: `/${key}`,
   index: String(i + 1).padStart(2, "0"),
   category: key,
-  title: CATEGORIES[key].label,
-  description: CATEGORIES[key].blurb,
+  title: CATEGORIES[key]!.label,
+  description: CATEGORIES[key]!.blurb,
 }));
 
 export const LATEST: Article[] = [...ARTICLES]
@@ -68,7 +68,7 @@ export const LATEST: Article[] = [...ARTICLES]
   .map((a) => toCard(a.slug));
 
 export const NAV = CATEGORY_ORDER.map((key) => ({
-  label: CATEGORIES[key].label,
+  label: CATEGORIES[key]!.label,
   href: `/${key}`,
 }));
 

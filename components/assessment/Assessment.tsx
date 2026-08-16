@@ -48,7 +48,7 @@ export function Assessment() {
 
     const bucket = Math.min(9, Math.floor(score / 10));
     const below = DISTRIBUTION.slice(0, bucket).reduce((a, b) => a + b, 0);
-    const percentile = Math.max(1, Math.min(99, Math.round(below + (DISTRIBUTION[bucket] ?? 0) / 2)));
+    const percentile = Math.max(1, Math.min(99, Math.round(below + DISTRIBUTION[bucket] / 2)));
 
     const ranked = (Object.keys(LAYERS) as LayerKey[])
       .map((key) => ({ key, gap: layerScore[key] - LAYERS[key].median }))
@@ -59,7 +59,7 @@ export function Assessment() {
   }, [answers]);
 
   if (!done) {
-    const question = QUESTIONS[step]!;
+    const question = QUESTIONS[step];
 
     return (
       <section className="mx-auto max-w-[860px] px-4 pt-[clamp(28px,5vw,56px)] sm:px-7">
