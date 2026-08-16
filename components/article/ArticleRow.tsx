@@ -17,8 +17,8 @@ export function ArticleRow({ article }: { article: ArticleMeta }) {
           {article.title}
         </span>
         <span className="mt-1.5 flex flex-wrap gap-3 font-mono text-[10px] uppercase tracking-[0.18em] text-brand-500">
-          <span style={{ color: CATEGORIES[article.category].color }}>
-            {CATEGORIES[article.category].label}
+          <span style={{ color: CATEGORIES[article.category]!.color }}>
+            {CATEGORIES[article.category]!.label}
           </span>
           <span>{article.meta}</span>
         </span>

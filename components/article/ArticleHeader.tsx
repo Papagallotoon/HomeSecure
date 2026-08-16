@@ -13,7 +13,7 @@ const KIND_LABEL: Record<ArticleMeta["kind"], string> = {
 // la prise en pleine largeur. Les chiffres clés donnent l'échelle du test avant
 // que le lecteur n'entre dans le corps.
 export function ArticleHeader({ article }: { article: ArticleMeta }) {
-  const category = CATEGORIES[article.category];
+  const category = CATEGORIES[article.category]!;
 
   return (
     <header>

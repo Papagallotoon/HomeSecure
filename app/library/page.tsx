@@ -34,7 +34,7 @@ export default function LibraryPage() {
           <section key={key} className="mt-11">
             <div className="flex items-baseline justify-between gap-4 border-b border-brand-300 pb-3.5">
               <h2 className="m-0 font-condensed text-[clamp(22px,3vw,28px)] font-extrabold uppercase tracking-[0.03em] text-brand-950">
-                {CATEGORIES[key].label}
+                {CATEGORIES[key]!.label}
               </h2>
               <Link href={`/${key}`} className="font-mono text-[10px] uppercase tracking-ops text-brand-600">
                 Hub →
